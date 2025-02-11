@@ -47,5 +47,9 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
+app.get("/", (req, res) => {
+    res.send("Welcome to the Replicate Demo API! Use the /predict endpoint.");
+});
+
 
 
