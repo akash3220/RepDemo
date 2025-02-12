@@ -16,10 +16,25 @@ app.get("/", (req, res) => {
     res.send("Welcome to the Replicate Demo API! Use the /predict endpoint.");
 });
 
+// Test endpoint to verify logging
+app.get("/test-logs", (req, res) => {
+    console.log("========== TEST LOGS ==========");
+    console.log("1. Test log message");
+    console.log("2. Environment variables present:", {
+        PORT: !!process.env.PORT,
+        REPLICATE_API_KEY: !!process.env.REPLICATE_API_KEY
+    });
+    console.log("========== END TEST LOGS ==========");
+    res.json({ message: "Test logs have been written" });
+});
+
 // Endpoint to call Replicate API
 app.post("/predict", async (req, res) => {
     try {
-        console.log("POST /predict called with input:", req.body);
+        console.log("========== START OF REQUEST ==========");
+        console.log("1. Received POST request to /predict");
+        console.log("2. Request body:", req.body);
+        console.log("3. REPLICATE_API_KEY present:", !!REPLICATE_API_KEY);
 
         const input = {
             top_p: 1,
@@ -29,6 +44,9 @@ app.post("/predict", async (req, res) => {
             presence_penalty: 0,
             frequency_penalty: 0
         };
+
+        console.log("4. Prepared input:", input);
+        console.log("5. About to make API call to Replicate...");
 
         const response = await axios.post(
             "https://api.replicate.com/v1/predictions",
@@ -44,11 +62,24 @@ app.post("/predict", async (req, res) => {
             }
         );
 
-        console.log("API response:", response.data); // Log response
+        console.log("6. Received response from Replicate");
+        console.log("7. Response status:", response.status);
+        console.log("8. Response data:", response.data);
+        console.log("========== END OF REQUEST ==========");
+        
         res.json(response.data);
     } catch (error) {
-        console.error("Error:", error.response?.data || error.message); // Log errors
-        res.status(500).json({ error: error.response?.data || error.message });
+        console.error("Error details:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status,
+            headers: error.response?.headers,
+            config: error.config
+        });
+        res.status(500).json({ 
+            error: error.message,
+            details: error.response?.data
+        });
     }
 });
 
