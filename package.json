@@ -11,6 +11,10 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "^5.0.0"
+    "body-parser": "^2.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.0",
+    "replicate": "^1.0.1"
   }
 }
