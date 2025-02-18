@@ -9,7 +9,7 @@ dotenv.config(); // Load environment variables from .env
 const app = express();
 const port = process.env.PORT || 3000;
 
-connsole.log("Hello World");
+console.log("Hello World");
 
 // Middleware
 app.use(cors()); // Allow cross-origin requests
