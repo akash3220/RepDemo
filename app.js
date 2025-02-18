@@ -18,14 +18,10 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN, // Add your Replicate API key in .env
 });
 
-// Handle POST request
-app.post("/ask", async (req, res) => {
+// Default route to execute Replicate API automatically
+app.get("/", async (req, res) => {
   try {
-    const { prompt } = req.body;
-
-    if (!prompt) {
-      return res.status(400).json({ error: "Prompt is required" });
-    }
+    const prompt = "What is the speed of an unladen swallow?"; // Predefined prompt
 
     const input = {
       top_p: 1,
@@ -42,6 +38,7 @@ app.post("/ask", async (req, res) => {
       responseText += event.toString();
     }
 
+    console.log("AI Response:", responseText); // Log response in Render logs
     res.json({ response: responseText });
 
   } catch (error) {
@@ -54,6 +51,76 @@ app.post("/ask", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import express from "express";
+// import cors from "cors";
+// import bodyParser from "body-parser";
+// import dotenv from "dotenv";
+// import Replicate from "replicate";
+
+// dotenv.config(); // Load environment variables from .env
+
+// const app = express();
+// const port = process.env.PORT || 3000;
+
+// // Middleware
+// app.use(cors()); // Allow cross-origin requests
+// app.use(bodyParser.json()); // Parse JSON request bodies
+
+// // Initialize Replicate
+// const replicate = new Replicate({
+//   auth: process.env.REPLICATE_API_TOKEN, // Add your Replicate API key in .env
+// });
+
+// // Handle POST request
+// app.post("/ask", async (req, res) => {
+//   try {
+//     const { prompt } = req.body;
+
+//     if (!prompt) {
+//       return res.status(400).json({ error: "Prompt is required" });
+//     }
+
+//     const input = {
+//       top_p: 1,
+//       prompt: prompt,
+//       max_tokens: 20480,
+//       temperature: 0.1,
+//       presence_penalty: 0,
+//       frequency_penalty: 0,
+//     };
+
+//     let responseText = "";
+
+//     for await (const event of replicate.stream("deepseek-ai/deepseek-r1", { input })) {
+//       responseText += event.toString();
+//     }
+
+//     res.json({ response: responseText });
+
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ error: "Something went wrong" });
+//   }
+// });
+
+// // Start the server
+// app.listen(port, () => {
+//   console.log(`Server running at http://localhost:${port}`);
+// });
 
 
 
