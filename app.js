@@ -3,6 +3,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import Replicate from "replicate";
+import OpenAI from "openai";
+const openai = new OpenAI();
 
 dotenv.config(); // Load environment variables from .env
 
@@ -34,11 +36,11 @@ app.get("/", async (req, res) => {
     //   frequency_penalty: 0,
     // };
 
-    const input = {
-      prompt: "Write a meta-haiku",
-      max_tokens: 8192,
-      system_prompt: ""
-    };
+    // const input = {
+    //   prompt: "Write a meta-haiku",
+    //   max_tokens: 8192,
+    //   system_prompt: ""
+    // };
 
     let responseText = "";
 
@@ -46,9 +48,26 @@ app.get("/", async (req, res) => {
     //   responseText += event.toString();
     // }
 
-    for await (const event of replicate.stream("anthropic/claude-3.5-haiku", { input })) {
-      responseText += event.toString();
-    };
+    // for await (const event of replicate.stream("anthropic/claude-3.5-haiku", { input })) {
+    //   responseText += event.toString();
+    // };
+
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "developer", content: "You are a helpful assistant." },
+        {
+          role: "user",
+          content: "Write a haiku about recursion in programming.",
+        },
+      ],
+      store: true,
+    });
+
+    console.log(completion.choices[0].message);
+    responseText = completion.choices[0].message.content;
+
 
     console.log("AI Response:", responseText); // Log response in Render logs
     res.json({ response: responseText });
