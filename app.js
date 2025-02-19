@@ -25,20 +25,30 @@ app.get("/", async (req, res) => {
   try {
     const prompt = "What is the speed of an unladen swallow?"; // Predefined prompt
 
+    // const input = {
+    //   top_p: 1,
+    //   prompt: prompt,
+    //   max_tokens: 20480,
+    //   temperature: 0.1,
+    //   presence_penalty: 0,
+    //   frequency_penalty: 0,
+    // };
+
     const input = {
-      top_p: 1,
-      prompt: prompt,
-      max_tokens: 20480,
-      temperature: 0.1,
-      presence_penalty: 0,
-      frequency_penalty: 0,
+      prompt: "Write a meta-haiku",
+      max_tokens: 8192,
+      system_prompt: ""
     };
 
     let responseText = "";
 
-    for await (const event of replicate.stream("deepseek-ai/deepseek-r1", { input })) {
+    // for await (const event of replicate.stream("deepseek-ai/deepseek-r1", { input })) {
+    //   responseText += event.toString();
+    // }
+
+    for await (const event of replicate.stream("anthropic/claude-3.5-haiku", { input })) {
       responseText += event.toString();
-    }
+    };
 
     console.log("AI Response:", responseText); // Log response in Render logs
     res.json({ response: responseText });
